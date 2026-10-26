@@ -129,6 +129,31 @@ git push -u origin main
 
 > 提醒：Pages 站点是**公开可访问**的。发布前请确认讲义与教材图片的版权没有顾虑。
 
+### 打不开 `xxx.github.io` 怎么办
+
+国内网络有可能访问不到 `github.com` / `github.io`（浏览器表现为「连接超时」）。
+这种情况下有两条**不依赖外网**的路：
+
+1. **局域网访问**（手机 / 平板 / 同事电脑都能看）
+
+```bash
+cd personal-site
+python -m http.server 8080 --bind 0.0.0.0
+```
+
+然后用 `ipconfig` 查出本机内网 IP（如 `192.168.x.x`），同一 Wi-Fi 下打开
+`http://192.168.x.x:8080/`。Windows 防火墙需要放行该端口：
+
+```powershell
+New-NetFirewallRule -DisplayName "physics-notes-8080" -Direction Inbound `
+  -Protocol TCP -LocalPort 8080 -Action Allow -Profile Private
+```
+
+2. **离线分发**：把整个 `personal-site` 文件夹拷给学生，双击 `index.html` 就能读。
+   首页、侧栏目录、正文、教材图片全部正常；只有两处会降级——
+   内嵌 PDF 预览改成「在新标签页打开」的链接，`contentFile` 引用的 `.md` 读不到
+   （页面会给出明确提示，不会出现空白）。
+
 ## 四、页面能力
 
 - **首页**：章节目录，列出每章每节，显示摘要与「N 张图 · N 个附件」
