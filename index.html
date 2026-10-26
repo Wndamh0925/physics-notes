@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>高中物理讲义</title>
+<meta name="description" content="按教材章节整理的讲义，支持在线阅读讲义正文、查看教材图片与配套文档。">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a id="site-link" href="#/">
+      <h1 id="site-title">高中物理讲义</h1>
+    </a>
+    <p id="site-subtitle" class="subtitle">按教材章节整理，可直接在线阅读</p>
+    <p id="site-desc" class="desc">讲义正文 + 教材插图 + 配套文档，章 → 节两级目录。</p>
+  </div>
+</header>
+
+<!-- 出错时在这里显示原因，而不是留一个空白页面 -->
+<div id="fatal" class="fatal" hidden></div>
+
+<noscript>
+  <div class="fatal">本站需要 JavaScript 才能显示目录与正文。请在浏览器设置中启用 JavaScript 后刷新。</div>
+</noscript>
+
+<p id="boot" class="boot">正在加载目录…（若长时间停留在这里，请检查 data/chapters.js 是否正确加载）</p>
+
+<div class="wrap layout">
+
+  <button id="nav-toggle" class="nav-toggle" type="button">目录</button>
+
+  <aside class="sidebar" id="sidebar">
+    <nav aria-label="章节目录">
+      <p class="nav-head">目录</p>
+      <ul id="sidebar-list" class="nav-list"></ul>
+    </nav>
+  </aside>
+
+  <main class="content" id="view"></main>
+
+</div>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p id="footer-text">内容为教学用途整理，图片与文档版权归原作者所有。</p>
+  </div>
+</footer>
+
+<script src="data/chapters.js"></script>
+<script src="data/catalog.js"></script>
+<script src="assets/markdown.js"></script>
+<script src="assets/viewer.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

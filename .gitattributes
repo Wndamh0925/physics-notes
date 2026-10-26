@@ -1,0 +1,17 @@
+# 保护二进制资源不被 Git 的换行转换破坏（PDF / 图片 / Office 文档）
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.svg text
+
+*.pdf binary
+*.doc binary
+*.docx binary
+*.ppt binary
+*.pptx binary
+*.xls binary
+*.xlsx binary
