@@ -18,6 +18,7 @@
 Token 需要 classic PAT，勾选 repo（或 public_repo）权限。
 """
 
+import base64
 import json
 import os
 import subprocess
@@ -106,8 +107,10 @@ def main():
 
     env = dict(os.environ)
     env['GIT_TERMINAL_PROMPT'] = '0'
+    # GitHub 的 git 端点只接受 Basic 认证（Bearer 会被判为 invalid credentials）
+    basic = base64.b64encode(('%s:%s' % (owner, TOKEN)).encode()).decode()
     push = git(proxy_args() + [
-        '-c', 'http.extraHeader=Authorization: Bearer ' + TOKEN,
+        '-c', 'http.extraHeader=Authorization: Basic ' + basic,
         'push', '-u', 'origin', 'main'
     ], env=env)
     if push.returncode != 0:

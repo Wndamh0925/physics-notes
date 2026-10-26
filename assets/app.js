@@ -15,6 +15,10 @@
 
   var byId = function (id) { return document.getElementById(id); };
 
+  // 是否以本地文件方式打开（双击 index.html）。file:// 下浏览器限制较多，
+  // 例如不能在页面内嵌本地 PDF、不能用 fetch 读本地正文文件，需要降级提示。
+  var IS_FILE = location.protocol === 'file:';
+
   function el(tag, cls, text) {
     var n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -217,10 +221,11 @@
     var body = el('article', 'md');
     main.appendChild(body);
 
-    if (sec.contentFile && typeof fetch !== 'function') {
+    if (sec.contentFile && (IS_FILE || typeof fetch !== 'function')) {
       body.appendChild(el('p', 'notice',
-        '当前浏览器不支持读取外部正文文件（' + sec.contentFile +
-        '）。请把正文直接写在 data/chapters.js 的 content 字段里，或换用较新的浏览器。'));
+        '正文放在外部文件 ' + sec.contentFile + ' 里，而当前是以本地文件方式打开的，' +
+        '浏览器不允许读取本地文件。请用本地服务器（如 http://127.0.0.1:8080/）访问，' +
+        '或把正文直接写在 data/chapters.js 的 content 字段里。'));
     } else if (sec.contentFile) {
       body.appendChild(el('p', 'notice', '正在读取正文文件：' + sec.contentFile));
       // 显式解析成绝对地址，避免页面带 <base> 或部署在子目录时取错路径
@@ -305,11 +310,19 @@
 
         box.appendChild(head);
 
-        var frame = el('iframe', 'doc-frame');
-        frame.src = doc.path;
-        frame.loading = 'lazy';
-        frame.setAttribute('title', doc.title || doc.path);
-        box.appendChild(frame);
+        // 直接双击 index.html（file://）打开时，浏览器禁止在页面里内嵌本地文件，
+        // 此时不渲染 iframe，改为可点击的提示，避免出现一块空白。
+        if (IS_FILE) {
+          box.appendChild(el('p', 'notice',
+            '当前是以本地文件方式打开的，浏览器不允许内嵌显示本地文档；' +
+            '请点上方「在新标签页打开 ↗」查看。用本地服务器访问时可直接内嵌预览。'));
+        } else {
+          var frame = el('iframe', 'doc-frame');
+          frame.src = doc.path;
+          frame.setAttribute('loading', 'lazy');
+          frame.setAttribute('title', doc.title || doc.path);
+          box.appendChild(frame);
+        }
 
         main.appendChild(box);
       });
