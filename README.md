@@ -95,6 +95,40 @@ python -m http.server 8000       # 打开 http://localhost:8000
 站点用的是 hash 路由（`#/s/…`），**不需要任何服务端 rewrite 配置**，
 刷新页面也不会 404。
 
+### 发布到 GitHub Pages
+
+仓库里已经放好了 GitHub Pages 需要的两个文件：
+
+- `.nojekyll` —— 跳过 Jekyll 构建，发布更快，也不会吞掉特殊目录
+- `.gitattributes` —— 把 PDF / 图片标记为二进制，避免换行转换损坏文件
+
+**自动方式**（推荐）：
+
+```bash
+cd personal-site
+set GH_TOKEN=ghp_xxxxxxxxxxxxxxxxxxxx      # Windows cmd
+python tools/deploy_github.py physics-notes
+```
+
+脚本会依次完成：建公开仓库 → 推送 main 分支 → 开启 Pages → 输出网址。
+Token 只通过环境变量传给进程，不会写入任何文件。
+
+**手动方式**：
+
+1. 在 GitHub 网页新建空仓库 `physics-notes`（设为 Public）
+2. 在本目录执行：
+
+```bash
+git remote add origin https://github.com/<你的用户名>/physics-notes.git
+git push -u origin main
+```
+
+3. 仓库 Settings → Pages → Build and deployment → Source 选 `main` / `/(root)` → Save
+
+网址形如 `https://<你的用户名>.github.io/physics-notes/`。首次构建一般 1~3 分钟。
+
+> 提醒：Pages 站点是**公开可访问**的。发布前请确认讲义与教材图片的版权没有顾虑。
+
 ## 四、页面能力
 
 - **首页**：章节目录，列出每章每节，显示摘要与「N 张图 · N 个附件」
